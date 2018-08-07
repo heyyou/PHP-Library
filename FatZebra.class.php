@@ -1,7 +1,7 @@
 <?php
 	/**
 	* Fat Zebra PHP Gateway Library
-	* Version 1.1.7
+	* Version 1.1.8
 	*
 	* The original source for this library, including its tests can be found at
 	* https://github.com/fatzebra/PHP-Library
@@ -23,7 +23,7 @@
 		/**
 		* The version of this library
 		*/
-		public $version = "1.1.7";
+		public $version = "1.1.8";
 
 		/**
 		* The URL of the Fat Zebra gateway
@@ -139,7 +139,7 @@
 		public function refund($transaction_id, $amount, $reference) {
 			if(is_null($transaction_id) || strlen($transaction_id) === 0) throw new \InvalidArgumentException("Transaction ID is required");
 			if(is_null($amount) || strlen($amount) === 0) throw new \InvalidArgumentException("Amount is required");
-			if(floatval($amount) < 0.01) throw new \InvalidArgumentException("Amount is invalid - must be a positive value");
+			if(floatval($amount) <= 0) throw new \InvalidArgumentException("Amount is invalid - must be a positive value");
 			if(is_null($reference) || strlen($reference) === 0) throw new \InvalidArgumentException("Reference is required");
 
 			if (function_exists('bcmul')) {
