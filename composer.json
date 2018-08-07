@@ -1,10 +1,10 @@
 {
-	"name": "fatzebra/fatzebra-php",
-	"version": "1.1.7",
+	"name": "heyyou/fatzebra-php",
+	"version": "1.1.8",
 	"repositories": [
 		{
 			"type": "vcs",
-			"url": "https://github.com/fatzebra/PHP-Library"
+			"url": "https://github.com/heyyou/fatzebra-PHP-Library"
 		}
 	]
 }
