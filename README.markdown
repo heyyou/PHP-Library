@@ -1,7 +1,7 @@
 PHP API Library for Fat Zebra
 ==============================
 
-Release 1.1.8 for API version 1.0
+Release 1.2.2 for API version 1.0
 
 A PHP library for the [Fat Zebra](https://www.fatzebra.com.au) Online Payment Gateway (for Australian Merchants)
 Now supports recurring billing (subscriptions, plans, customers)
@@ -9,7 +9,7 @@ Now supports recurring billing (subscriptions, plans, customers)
 Dependencies
 ------------
 
- * PHP (Tested on version 5.3)
+ * PHP (Tested on versions; `5.4`, `5.6`, `7.0`, `7.1`, `7.2`)
  * cURL
 
  [![Build Status](https://secure.travis-ci.org/fatzebra/PHP-Library.png?branch=master)](http://travis-ci.org/fatzebra/PHP-Library)
@@ -17,9 +17,11 @@ Dependencies
 Installing
 ----------
 
-Copy the files FatZebra.class.php and cacert.pem to your project lib folder (or similar)
+Copy the files FatZebra.class.php and ca-bundle.pem to your project lib folder (or similar)
 
-**Note:** The cacert.pem file needs to be placed in the same location as the FatZebra.class.php file to ensure certificate verification. The calls to the gateway will fail without this.
+**Note:** The ca-bundle.pem file needs to be placed in the same location as the FatZebra.class.php file to ensure certificate verification. The calls to the gateway will likely fail without this, however if you have taken steps to ensure this will work (such as including the bundle in your OS root trust store) you may use the `set_ca_bundle` method to define an empty string for the OS root trust store or the path to another bundle.
+
+If you wish to use a minimal CA bundle you can copy the `ca-bundle-minimal.pem` file to the same directory, but rename it to `ca-bundle.pem`.
 
 Usage
 -----
