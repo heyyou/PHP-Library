@@ -347,6 +347,18 @@ class Gateway {
     }
 
     /**
+     * Fetch tokenized card details
+     *
+     * @param $token
+     * @return \stdClass
+     * @throws TimeoutException
+     */
+    public function get_tokenized_card($token) {
+        if (is_null($token) || strlen($token) === 0) throw new \InvalidArgumentException("Token is required");
+        return $this->do_request("GET", "/credit_cards/" . $token);
+    }
+
+    /**
      * Created a new tokenized credit card
      * @param string $card_holder the card holders name
      * @param string $card_number the card number
