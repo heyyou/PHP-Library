@@ -112,7 +112,7 @@ class Gateway {
      * @param string $card_number the card number
      * @param string $expiry the card expiry (mm/yyyy format)
      * @param string $cvv the card verification value
-     * @return \StdObject
+     * @return \stdClass
      */
     public function purchase($amount, $reference, $card_holder, $card_number, $expiry, $cvv, $fraud_data = null, $currency = "AUD", $extra = null) {
         $customer_ip = $this->get_customer_ip();
@@ -156,7 +156,7 @@ class Gateway {
      * @param string $reference the purchase reference
      * @param string $cvv the card verification value - optional but recommended
      * @param string $currency the currency code for the transaction. Defaults to AUD
-     * @return \StdObject
+     * @return \stdClass
      */
     public function token_purchase($token, $amount, $reference, $cvv = null, $currency = "AUD") {
         if(is_null($amount)) throw new \InvalidArgumentException("Amount is a required field.");
@@ -188,7 +188,7 @@ class Gateway {
      * @param string $cvv the card security code (also called CVV, CVC, CVN etc)
      * @param string $currency the currency code for the transaction. Defaults to AUD
      * @param array<string,string> $extra an assoc. array of extra params to merge into the request (e.g. metadata, fraud etc)
-     * @return \StdObject
+     * @return \stdClass
      */
     public function authorization($amount, $reference, $card_holder, $card_number, $expiry, $cvv, $currency = "AUD", $extra = null) {
         if(is_null($amount)) throw new \InvalidArgumentException("Amount is a required field.");
@@ -229,7 +229,7 @@ class Gateway {
      * @param string $card_token the card token or alias for the authorization
      * @param string $currency the currency code for the transaction. Defaults to AUD
      * @param array<string,string> $extra an assoc. array of extra params to merge into the request (e.g. metadata, fraud etc)
-     * @return \StdObject
+     * @return \stdClass
      */
     public function token_authorization($amount, $reference, $card_token, $currency = "AUD", $extra = null) {
         if(is_null($amount)) throw new \InvalidArgumentException("Amount is a required field.");
@@ -263,7 +263,7 @@ class Gateway {
      * @param string $transaction_id the pre-auth transaction id (e.g. xxxx-P-yyyyyyyy)
      * @param float $amount the amount ot capture
      * @param array<string,string> $extra an assoc. array of extra params to merge into the request (e.g. metadata, fraud etc)
-     * @return \StdObject
+     * @return \stdClass
      */
     public function capture($transaction_id, $amount, $extra = null) {
         if(is_null($amount)) throw new \InvalidArgumentException("Amount is a required field.");
@@ -284,7 +284,7 @@ class Gateway {
      * Voids a purchase or authorization which was processed against the bank
      * @param string $transaction_id the transaction to void's id (e.g. xxxx-P-yyyyyyyy)
      * @param array<string,string> $extra an assoc. array of extra params to merge into the request (e.g. metadata, fraud etc)
-     * @return \StdObject
+     * @return \stdClass
      */
     public function void($transaction_id, $extra = null) {
         $payload = array();
@@ -302,7 +302,7 @@ class Gateway {
      * @param float $amount the amount to be refunded
      * @param string $reference the refund reference
      * @param array<string,string> $extra an assoc. array of extra params to merge into the request (e.g. metadata, fraud etc)
-     * @return \StdObject
+     * @return \stdClass
      */
     public function refund($transaction_id, $amount, $reference, $extra = null) {
         if(is_null($transaction_id) || strlen($transaction_id) === 0) throw new \InvalidArgumentException("Transaction ID is required");
@@ -329,7 +329,7 @@ class Gateway {
     /**
      * Retrieves a purchase from the FatZebra gateway
      * @param string $reference the purchase ID
-     * @return \StdObject
+     * @return \stdClass
      */
     public function get_purchase($reference) {
         if (is_null($reference) || strlen($reference) === 0) throw new \InvalidArgumentException("Reference is required");
@@ -339,11 +339,23 @@ class Gateway {
     /**
      * Retrieves a refund from the FatZebra gateway
      * @param string $reference the refund ID
-     * @return \StdObject
+     * @return \stdClass
      */
     public function get_refund($reference) {
         if (is_null($reference) || strlen($reference) === 0) throw new \InvalidArgumentException("Reference is required");
         return $this->do_request("GET", "/refunds/" . $reference);
+    }
+
+    /**
+     * Fetch tokenized card details
+     *
+     * @param $token
+     * @return \stdClass
+     * @throws TimeoutException
+     */
+    public function get_tokenized_card($token) {
+        if (is_null($token) || strlen($token) === 0) throw new \InvalidArgumentException("Token is required");
+        return $this->do_request("GET", "/credit_cards/" . $token);
     }
 
     /**
@@ -352,7 +364,7 @@ class Gateway {
      * @param string $card_number the card number
      * @param string $expiry_date the card expiry date (mm/yyyy format)
      * @param string $cvv the card verification value
-     * @return \StdObject
+     * @return \stdClass
      */
     public function tokenize($card_holder, $card_number, $expiry_date, $cvv) {
         if(is_null($card_holder) || (strlen($card_holder) === 0)) throw new \InvalidArgumentException("Card Holder is a required field.");
@@ -383,7 +395,7 @@ class Gateway {
      * @param string $card_number the credit card number
      * @param string $card_expiry the card expiry date (mm/yyyy)
      * @param string $cvv the CVV for the credit card
-     * @return \StdObject
+     * @return \stdClass
      */
     public function create_customer($first_name, $last_name, $reference, $email, $card_holder, $card_number, $card_expiry, $cvv) {
         if(is_null($first_name) || (strlen($first_name) === 0)) throw new \InvalidArgumentException("First name is a required field.");
@@ -418,7 +430,7 @@ class Gateway {
      * @param string $method the request method ("POST" or "GET")
      * @param string $uri the request URI (e.g. /purchases, /credit_cards etc)
      * @param Array $payload the request payload (if a POST request)
-     * @return \StdObject
+     * @return \stdClass
      */
     private function do_request($method, $uri, $payload = null) {
         $curl = curl_init();
