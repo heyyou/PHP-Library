@@ -1,7 +1,7 @@
 <?php
 /**
  * Fat Zebra PHP Gateway Library
- * Version 1.2.2
+ * Version 1.2.3
  *
  * The original source for this library, including its tests can be found at
  * https://github.com/fatzebra/PHP-Library
@@ -23,7 +23,7 @@ class Gateway {
     /**
      * The version of this library
      */
-    public $version = "1.2.2";
+    public $version = "1.2.3";
 
     /**
      * The URL of the Fat Zebra gateway
