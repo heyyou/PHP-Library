@@ -112,9 +112,13 @@ class Gateway {
      * @param string $card_number the card number
      * @param string $expiry the card expiry (mm/yyyy format)
      * @param string $cvv the card verification value
+     * @param null $fraud_data
+     * @param string $currency
+     * @param null $extra
      * @return \stdClass
+     * @throws TimeoutException
      */
-    public function purchase($amount, $reference, $card_holder, $card_number, $expiry, $cvv, $fraud_data = null, $currency = "AUD", $extra = null) {
+    public function purchase($amount, $reference, $card_holder, $card_number, $expiry, $cvv = null, $fraud_data = null, $currency = "AUD", $extra = null) {
         $customer_ip = $this->get_customer_ip();
 
         if(is_null($amount)) throw new \InvalidArgumentException("Amount is a required field.");
@@ -123,7 +127,6 @@ class Gateway {
         if(is_null($card_holder) || (strlen($card_holder) === 0)) throw new \InvalidArgumentException("Card Holder is a required field.");
         if(is_null($card_number) || (strlen($card_number) === 0)) throw new \InvalidArgumentException("Card Number is a required field.");
         if(is_null($expiry)) throw new \InvalidArgumentException("Expiry is a required field.");
-        if(is_null($cvv)) throw new \InvalidArgumentException("CVV is a required field.");
 
         $int_amount = self::floatToInt($amount);
 
@@ -131,12 +134,15 @@ class Gateway {
             "card_holder" => $card_holder,
             "card_number" => $card_number,
             "card_expiry" => $expiry,
-            "cvv" => $cvv,
             "reference" => $reference,
             "amount" => $int_amount,
             "currency" => $currency,
             "customer_ip" => $customer_ip
         );
+
+        if (!is_null($cvv)) {
+            $payload['cvv'] = $cvv;
+        }
 
         if (!is_null($fraud_data)) {
             $payload['fraud'] = $fraud_data;
